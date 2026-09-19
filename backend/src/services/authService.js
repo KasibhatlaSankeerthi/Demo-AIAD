@@ -4,7 +4,7 @@ const findUserByEmail = async (email) => {
   const sql = `
     SELECT id, first_name, last_name, email, role, password_hash, account_status, is_deleted
     FROM users
-    WHERE email = ?
+    WHERE LOWER(email) = ?
     LIMIT 1
   `;
 
