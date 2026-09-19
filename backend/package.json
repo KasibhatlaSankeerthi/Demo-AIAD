@@ -9,16 +9,12 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-<<<<<<< HEAD
-    "test": "jest"
-=======
     "lint": "eslint .",
     "test": "jest",
     "build": "node -e \"require('./src/app.js')\"",
     "migrate": "node scripts/migrate.js up",
     "migrate:down": "node scripts/migrate.js down",
     "seed": "node scripts/seed.js"
->>>>>>> origin/main
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -29,14 +25,9 @@
     "mysql2": "^3.11.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "jest": "^30.0.5",
-    "supertest": "^7.1.1"
-=======
     "@eslint/js": "^9.9.0",
     "eslint": "^9.9.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
->>>>>>> origin/main
   }
 }
