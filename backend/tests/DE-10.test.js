@@ -181,4 +181,26 @@ describe('DE-10 POST /api/auth/login', () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: 'JWT_ACCESS_SECRET is not configured' });
   });
+
+  test('DE-10-TC09 | invalid JWT expiry returns 500', async () => {
+    findUserByEmail.mockResolvedValueOnce({
+      id: 12,
+      first_name: 'Expiring',
+      last_name: 'User',
+      email: 'expiring@example.com',
+      role: 'Basic',
+      password_hash: 'hash',
+      account_status: 1,
+      is_deleted: 0,
+    });
+    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true);
+    process.env.JWT_ACCESS_EXPIRES_IN = 'not-a-valid-duration';
+
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'expiring@example.com', password: 'password123' });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'Internal server error' });
+  });
 });
