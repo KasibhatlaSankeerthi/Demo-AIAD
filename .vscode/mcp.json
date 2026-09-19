@@ -1,0 +1,13 @@
+{
+	"servers": {
+		"my-mcp-server-dcb34690": {
+			"url": "https://api.githubcopilot.com/mcp/",
+			"type": "http"
+		},
+		"my-mcp-server-0ed2e289": {
+			"url": "https://mcp.atlassian.com/v2/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
