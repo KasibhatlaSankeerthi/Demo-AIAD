@@ -66,6 +66,18 @@ describe('DE-10 POST /api/auth/login', () => {
     expect(response.body).toEqual({ error: 'Invalid email or password' });
   });
 
+  test('DE-10-TC03A | mixed-case and padded email is normalized before lookup', async () => {
+    findUserByEmail.mockResolvedValueOnce(null);
+
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ email: '  MiXeD@Example.com  ', password: 'password123' });
+
+    expect(findUserByEmail).toHaveBeenCalledWith('mixed@example.com');
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: 'Invalid email or password' });
+  });
+
   test('DE-10-TC04 | wrong password returns 401', async () => {
     findUserByEmail.mockResolvedValueOnce({
       id: 1,

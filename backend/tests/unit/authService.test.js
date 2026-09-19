@@ -11,11 +11,11 @@ describe('findUserByEmail', () => {
     mockExecute.mockReset();
   });
 
-  it('queries users by lowercase email for case-insensitive lookup', async () => {
+  it('normalizes email before querying for a case-insensitive lookup', async () => {
     const user = { id: 1, email: 'MixedCase@Example.com' };
     mockExecute.mockResolvedValueOnce([[user]]);
 
-    const result = await findUserByEmail('mixedcase@example.com');
+    const result = await findUserByEmail('  MixedCase@Example.com  ');
 
     expect(mockExecute).toHaveBeenCalledWith(
       expect.stringContaining('WHERE LOWER(email) = ?'),
