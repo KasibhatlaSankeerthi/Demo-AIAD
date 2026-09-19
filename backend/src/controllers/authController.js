@@ -21,17 +21,17 @@ const login = asyncWrapper(async (req, res) => {
     throw new AppError('Invalid email or password', 401);
   }
 
-  const passwordMatches = await bcrypt.compare(String(password), user.password_hash);
-  if (!passwordMatches) {
-    throw new AppError('Invalid email or password', 401);
-  }
-
   if (Number(user.account_status) === 0) {
     throw new AppError('Account is suspended', 403);
   }
 
   if (Number(user.is_deleted) === 1) {
     throw new AppError('Account is deleted', 403);
+  }
+
+  const passwordMatches = await bcrypt.compare(String(password), user.password_hash);
+  if (!passwordMatches) {
+    throw new AppError('Invalid email or password', 401);
   }
 
   const secret = process.env.JWT_ACCESS_SECRET;

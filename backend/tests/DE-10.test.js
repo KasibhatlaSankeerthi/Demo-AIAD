@@ -10,6 +10,7 @@ const app = require('../src/app');
 
 describe('DE-10 POST /api/auth/login', () => {
   const originalSecret = process.env.JWT_ACCESS_SECRET;
+  const originalExpiresIn = process.env.JWT_ACCESS_EXPIRES_IN;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -17,8 +18,22 @@ describe('DE-10 POST /api/auth/login', () => {
     process.env.JWT_ACCESS_EXPIRES_IN = '15m';
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   afterAll(() => {
-    process.env.JWT_ACCESS_SECRET = originalSecret;
+    if (typeof originalSecret === 'undefined') {
+      delete process.env.JWT_ACCESS_SECRET;
+    } else {
+      process.env.JWT_ACCESS_SECRET = originalSecret;
+    }
+
+    if (typeof originalExpiresIn === 'undefined') {
+      delete process.env.JWT_ACCESS_EXPIRES_IN;
+    } else {
+      process.env.JWT_ACCESS_EXPIRES_IN = originalExpiresIn;
+    }
   });
 
   test('DE-10-TC01 | missing email returns 400', async () => {
@@ -83,12 +98,13 @@ describe('DE-10 POST /api/auth/login', () => {
       account_status: 0,
       is_deleted: 0,
     });
-    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true);
+    const compareSpy = jest.spyOn(bcrypt, 'compare');
 
     const response = await request(app)
       .post('/api/auth/login')
       .send({ email: 'suspended@example.com', password: 'password123' });
 
+    expect(compareSpy).not.toHaveBeenCalled();
     expect(response.status).toBe(403);
     expect(response.body).toEqual({ error: 'Account is suspended' });
   });
@@ -104,12 +120,13 @@ describe('DE-10 POST /api/auth/login', () => {
       account_status: 1,
       is_deleted: 1,
     });
-    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true);
+    const compareSpy = jest.spyOn(bcrypt, 'compare');
 
     const response = await request(app)
       .post('/api/auth/login')
       .send({ email: 'deleted@example.com', password: 'password123' });
 
+    expect(compareSpy).not.toHaveBeenCalled();
     expect(response.status).toBe(403);
     expect(response.body).toEqual({ error: 'Account is deleted' });
   });
