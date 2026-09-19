@@ -11,7 +11,10 @@
     "dev": "node --watch src/server.js",
     "lint": "eslint .",
     "test": "jest",
-    "build": "node -e \"require('./src/app.js')\""
+    "build": "node -e \"require('./src/app.js')\"",
+    "migrate": "node scripts/migrate.js up",
+    "migrate:down": "node scripts/migrate.js down",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
